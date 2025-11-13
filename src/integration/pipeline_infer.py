@@ -108,7 +108,7 @@ if __name__ == "__main__":
     root = DATA_PROC / "images" / "test"
     all_images = list(root.rglob("*.jpg"))
     if not all_images:
-        print("⚠️ No test images found under:", root)
+        print("No test images found under:", root)
     else:
         sample = random.choice(all_images)
         print("[INFO] Using sample image:", sample)
