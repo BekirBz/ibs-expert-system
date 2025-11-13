@@ -5,7 +5,7 @@ This project develops an **AI-driven Expert System** that predicts **symptom sev
 It integrates **food recognition (CNN)**, **ontology-based trigger mapping**, and **machine learning (XGBoost)** to produce interpretable, patient-centered insights.  
 Explainability is achieved using **Grad-CAM** for CNN visualization and **SHAP** for feature-level interpretability.  
 
----
+----
 
 ## Project Structure
 
@@ -51,7 +51,7 @@ source .venv/bin/activate
 make setup
 ```
 
-⸻
+----
 
 ## Main Research Questions (RQs)
 
@@ -63,7 +63,7 @@ RQ4	Full pipeline inference (Food → Trigger → Symptom)	src/integration
 RQ5	Explainable AI with Grad-CAM and SHAP visualizations	src/xai
 
 
-⸻
+----
 
 ## Usage (Makefile Commands)
 
@@ -83,7 +83,7 @@ make clean	Clear generated reports
 make clean_data	Clear processed data
 
 
----
+----
 
 ## Visual Preview
 
@@ -99,14 +99,14 @@ Below are selected results generated automatically from the system:
 |-----------|--------------|
 | ![Confusion Matrix ResNet50](reports/figures/rq1_confusion_matrix_resnet50.png) | ![Confusion Matrix MobileNetV2](reports/figures/rq1_confusion_matrix_mobilenetv2.png) |
 
----
+----
 
 ### RQ2 — Ontology Mapping & Trigger Correlations
 | Mapping Accuracy | Ontology Graph |
 |------------------|----------------|
 | ![RQ2 Mapping Accuracy](reports/figures/rq2_mapping_accuracy.png) | ![RQ2 Ontology Graph](reports/figures/rq2_ontology_graph.png) |
 
----
+----
 
 ### RQ3 — Symptom Severity Models
 | ROC Curves | Feature Importance |
@@ -118,7 +118,7 @@ Below are selected results generated automatically from the system:
 |--------|----------------|----------|
 | ![LogReg](reports/figures/rq3_confusion_matrix_logreg.png) | ![RF](reports/figures/rq3_confusion_matrix_rf.png) | ![XGB](reports/figures/rq3_confusion_matrix_xgb.png) |
 
----
+----
 
 ### RQ4 — End-to-End Pipeline Inference
 The integrated pipeline combines food recognition, trigger ontology mapping, and XGBoost-based symptom prediction.
@@ -137,7 +137,7 @@ Example output (terminal):
 }
 
 
----
+----
 
 ### RQ5 — Explainable AI (XAI)
 | Grad-CAM Examples | SHAP Summary |
@@ -149,12 +149,12 @@ Example output (terminal):
 |--------|-----------|-----------|
 | ![SHAP Gluten](reports/figures/rq5_shap_dependence_gluten.png) | ![SHAP HighFat](reports/figures/rq5_shap_dependence_highfat.png) | ![SHAP Bar](reports/figures/rq5_shap_bar.png) |
 
----
+----
 
 ## Generated Reports
 
 All figures and tables are automatically saved under:
-
+```
 reports/
 ├── figures/
 │   ├── rq1_*.png
@@ -167,9 +167,9 @@ reports/
     ├── rq3_*.json
     ├── rq5_*.json
     └── ...
+```
 
-
-⸻
+----
 
 ## All outputs are reproducible using Makefile commands:
 
@@ -179,8 +179,7 @@ make demo    # Combined pipeline + XAI demo
 make figures # Generate all visual results
 
 
-⸻
-
+----
 ## Key Dependencies
 	•	Python 3.12
 	•	PyTorch 2.3.1
@@ -193,7 +192,7 @@ make figures # Generate all visual results
 	•	Matplotlib 3.8.4
 	•	Pandas 2.2.2
 
-⸻
+----
 
  ## Author
 
@@ -201,6 +200,5 @@ Bekir Bozoklar
 M.Sc. Software Engineering
 University of Europe for Applied Sciences, Germany
 
-⸻
 
 
