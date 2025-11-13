@@ -1,0 +1,33 @@
+{
+  "class_names": [
+    "Mild",
+    "Moderate/Severe",
+    "None"
+  ],
+  "models": {
+    "logreg": {
+      "accuracy": 0.9411764705882353,
+      "precision_weighted": 0.9312279648104279,
+      "recall_weighted": 0.9411764705882353,
+      "f1_weighted": 0.935927582041991,
+      "roc_auc_macro": 0.8982460756256704,
+      "classification_report": "                 precision    recall  f1-score   support\n\n           Mild      0.902     0.860     0.881       129\nModerate/Severe      0.953     0.981     0.967       376\n           None      0.000     0.000     0.000         5\n\n       accuracy                          0.941       510\n      macro avg      0.619     0.614     0.616       510\n   weighted avg      0.931     0.941     0.936       510\n"
+    },
+    "rf": {
+      "accuracy": 0.9411764705882353,
+      "precision_weighted": 0.9312279648104279,
+      "recall_weighted": 0.9411764705882353,
+      "f1_weighted": 0.935927582041991,
+      "roc_auc_macro": 0.9064584678596309,
+      "classification_report": "                 precision    recall  f1-score   support\n\n           Mild      0.902     0.860     0.881       129\nModerate/Severe      0.953     0.981     0.967       376\n           None      0.000     0.000     0.000         5\n\n       accuracy                          0.941       510\n      macro avg      0.619     0.614     0.616       510\n   weighted avg      0.931     0.941     0.936       510\n"
+    },
+    "xgb": {
+      "accuracy": 0.9411764705882353,
+      "precision_weighted": 0.9312279648104279,
+      "recall_weighted": 0.9411764705882353,
+      "f1_weighted": 0.935927582041991,
+      "roc_auc_macro": 0.9064584678596309,
+      "classification_report": "                 precision    recall  f1-score   support\n\n           Mild      0.902     0.860     0.881       129\nModerate/Severe      0.953     0.981     0.967       376\n           None      0.000     0.000     0.000         5\n\n       accuracy                          0.941       510\n      macro avg      0.619     0.614     0.616       510\n   weighted avg      0.931     0.941     0.936       510\n"
+    }
+  }
+}

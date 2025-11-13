@@ -1,0 +1,15 @@
+torch==2.3.1
+torchvision==0.18.1
+numpy==1.26.4
+scipy==1.11.4
+pandas==2.2.2
+matplotlib==3.8.4
+pillow==10.3.0
+scikit-learn==1.4.2
+joblib==1.4.2
+tqdm==4.66.4
+xgboost==2.0.3
+shap==0.45.1
+networkx==3.2.1
+graphviz==0.20.3
+pydot==1.4.2

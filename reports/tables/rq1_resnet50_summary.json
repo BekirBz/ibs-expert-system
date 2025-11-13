@@ -1,0 +1,24 @@
+{
+  "arch": "resnet50",
+  "val_best_acc": 0.9050980392156863,
+  "test_acc": 0.8952941176470588,
+  "classes": [
+    "cheesecake",
+    "fish_and_chips",
+    "fried_rice",
+    "greek_salad",
+    "hamburger",
+    "hot_dog",
+    "ice_cream",
+    "lasagna",
+    "omelette",
+    "pad_thai",
+    "pizza",
+    "ramen",
+    "spaghetti_bolognese",
+    "steak",
+    "sushi",
+    "tiramisu",
+    "waffles"
+  ]
+}

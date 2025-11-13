@@ -1,0 +1,68 @@
+# === PYTHON ENVIRONMENT ===
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+.env
+.venv/
+venv/
+env/
+Pipfile
+Pipfile.lock
+
+# === DATASETS ===
+data/raw/
+data/processed/
+data/interim/
+*.zip
+*.tar
+*.tar.gz
+*.h5
+*.csv
+!data/interim/trigger_mapping.csv   # Keep ontology mapping only
+
+# === MODEL CHECKPOINTS ===
+models/*.pt
+models/*.pkl
+models/*.h5
+models/*.ckpt
+models/*.onnx
+!models/README.md   # Optional notes
+
+# === REPORTS ===
+# Ignore all reports except the final visual results used in README
+reports/figures/
+!reports/figures/rq1_*
+!reports/figures/rq2_*
+!reports/figures/rq3_*
+!reports/figures/rq4_*
+!reports/figures/rq5_*
+!reports/tables/rq*_*
+!reports/.gitkeep
+
+# === NOTEBOOKS & TEMP FILES ===
+*.ipynb_checkpoints
+*.log
+*.tmp
+*.bak
+*.swp
+
+# === VISUAL STUDIO CODE ===
+.vscode/
+.history/
+*.code-workspace
+
+# === MACOS SYSTEM FILES ===
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

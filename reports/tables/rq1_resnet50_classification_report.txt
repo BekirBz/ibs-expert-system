@@ -1,0 +1,23 @@
+                     precision    recall  f1-score   support
+
+         cheesecake      0.888     0.793     0.838       150
+     fish_and_chips      0.946     0.933     0.940       150
+         fried_rice      0.837     0.927     0.880       150
+        greek_salad      0.934     0.947     0.940       150
+          hamburger      0.925     0.900     0.912       150
+            hot_dog      0.930     0.887     0.908       150
+          ice_cream      0.790     0.880     0.833       150
+            lasagna      0.861     0.867     0.864       150
+           omelette      0.780     0.900     0.836       150
+           pad_thai      0.937     0.893     0.915       150
+              pizza      0.938     0.900     0.918       150
+              ramen      0.945     0.920     0.932       150
+spaghetti_bolognese      0.939     0.927     0.933       150
+              steak      0.903     0.873     0.888       150
+              sushi      0.897     0.933     0.915       150
+           tiramisu      0.874     0.880     0.877       150
+            waffles      0.942     0.860     0.899       150
+
+           accuracy                          0.895      2550
+          macro avg      0.898     0.895     0.896      2550
+       weighted avg      0.898     0.895     0.896      2550
