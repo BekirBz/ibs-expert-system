@@ -1,13 +1,14 @@
-# IBS Expert System  
-### AI-based Food Intake & Symptom Severity Prediction for IBS Patients  
+IBS Expert System
 
-This project develops an **AI-driven Expert System** that predicts **symptom severity in Irritable Bowel Syndrome (IBS)** patients based on their dietary intake.  
-It integrates **food recognition (CNN)**, **ontology-based trigger mapping**, and **machine learning (XGBoost)** to produce interpretable, patient-centered insights.  
-Explainability is achieved using **Grad-CAM** for CNN visualization and **SHAP** for feature-level interpretability.  
+AI-based Food Intake & Symptom Severity Prediction for IBS Patients
 
----
+This project develops an AI-driven Expert System that predicts symptom severity in Irritable Bowel Syndrome (IBS) patients based on their dietary intake.
+It integrates food recognition (CNN), ontology-based trigger mapping, and machine learning (XGBoost) to produce interpretable, patient-centered insights.
+Explainability is provided using Grad-CAM (CNN decisions) and SHAP (feature-level interpretability).
 
-## Project Structure
+⸻
+
+Project Structure
 
 ibs-expert-system/
 │
@@ -17,29 +18,30 @@ ibs-expert-system/
 │   └── interim/                 # Trigger mapping CSV
 │
 ├── models/                      # Trained model checkpoints
+│
 ├── reports/
 │   ├── figures/                 # Visual outputs (GradCAM, SHAP, etc.)
 │   └── tables/                  # JSON + text reports
 │
 ├── src/
 │   ├── data_prep/               # Dataset download & preprocessing
-│   ├── knowledge/               # Ontology and trigger mapping
+│   ├── knowledge/               # Ontology & trigger mapping
 │   ├── ml/                      # Symptom severity models (RQ3)
 │   ├── integration/             # End-to-end pipeline (RQ4)
-│   ├── vision/                  # CNN models (RQ1)
+│   ├── vision/                  # CNN classification models (RQ1)
 │   └── xai/                     # Explainable AI (RQ5)
 │
 ├── requirements.txt             # Dependencies
-├── Makefile                     # Automated workflow runner
+├── Makefile                     # Automated workflow
 └── README.md                    # Project overview
 
----
 
-## Installation
+⸻
 
-```bash
+Installation
+
 # 1. Clone this repository
-git clone 
+git clone https://github.com/BekirBz/ibs-expert-system.git
 cd ibs-expert-system
 
 # 2. Create and activate virtual environment
@@ -52,77 +54,73 @@ make setup
 
 ⸻
 
-## Main Research Questions (RQs)
+Main Research Questions (RQs)
 
 RQ	Description	Module
 RQ1	Food image classification using CNN (ResNet50, MobileNetV2)	src/vision
-RQ2	Food-trigger mapping and ontology evaluation	src/knowledge
-RQ3	Symptom severity prediction via ML (LogReg, RF, XGBoost)	src/ml
-RQ4	Full pipeline inference (Food → Trigger → Symptom)	src/integration
-RQ5	Explainable AI with Grad-CAM and SHAP visualizations	src/xai
+RQ2	Food-trigger mapping & ontology evaluation	src/knowledge
+RQ3	Symptom severity prediction via ML (LogReg, RF, XGB)	src/ml
+RQ4	Full inference pipeline (Food → Trigger → Symptom)	src/integration
+RQ5	Explainable AI (Grad-CAM & SHAP visualizations)	src/xai
 
 
 ⸻
 
-## Usage (Makefile Commands)
+Usage (Makefile Commands)
 
 Command	Description
 make data	Download Food-101 dataset
 make subset	Create training subset
-make mapping	Build trigger mapping + ontology
+make mapping	Build trigger mapping + ontology graph
 make rq1	Train & evaluate CNN
-make rq2	Generate ontology figures
+make rq2	Generate ontology reports
 make rq3	Train symptom severity models
 make rq4	Run full inference pipeline
-make rq5	Run explainability bundle (Grad-CAM + SHAP)
-make demo	Run complete demo (Pipeline + XAI)
+make rq5_gradcam	Generate Grad-CAM visualizations
+make rq5_shap	Generate SHAP plots
 make figures	Generate all figures (RQ1–RQ5)
 make tables	Export all tables
-make clean	Clear generated reports
-make clean_data	Clear processed data
+make clean	Clean generated reports
+make clean_data	Remove processed dataset
 
 
----
+⸻
 
-## Visual Preview
+Visual Preview
 
-Below are selected results generated automatically from the system:
+RQ1 — CNN Food Classification
+	•	Accuracy Comparison
+	•	reports/figures/model_acc_bar.png
+	•	reports/figures/model_params_bar.png
+	•	Confusion Matrices
+	•	reports/figures/rq1_confusion_matrix_resnet50.png
+	•	reports/figures/rq1_confusion_matrix_mobilenetv2.png
 
-### RQ1 — CNN Food Classification
-| Model | Accuracy Comparison |
-|--------|---------------------|
-| ![Model Accuracy Bar](reports/figures/model_acc_bar.png) | ![Model Parameters](reports/figures/model_params_bar.png) |
+⸻
 
-**Confusion Matrices**
-| ResNet50 | MobileNetV2 |
-|-----------|--------------|
-| ![Confusion Matrix ResNet50](reports/figures/rq1_confusion_matrix_resnet50.png) | ![Confusion Matrix MobileNetV2](reports/figures/rq1_confusion_matrix_mobilenetv2.png) |
+RQ2 — Ontology Mapping
+	•	Mapping Accuracy
+reports/figures/rq2_mapping_accuracy.png
+	•	Ontology Graph
+reports/figures/rq2_ontology_graph.png
 
----
+⸻
 
-### RQ2 — Ontology Mapping & Trigger Correlations
-| Mapping Accuracy | Ontology Graph |
-|------------------|----------------|
-| ![RQ2 Mapping Accuracy](reports/figures/rq2_mapping_accuracy.png) | ![RQ2 Ontology Graph](reports/figures/rq2_ontology_graph.png) |
+RQ3 — Symptom Severity Models
+	•	ROC Curves
+reports/figures/rq3_roc_curves.png
+	•	Feature Importance
+reports/figures/rq3_feature_importance.png
+	•	Confusion Matrices
+	•	rq3_confusion_matrix_logreg.png
+	•	rq3_confusion_matrix_rf.png
+	•	rq3_confusion_matrix_xgb.png
 
----
+⸻
 
-### RQ3 — Symptom Severity Models
-| ROC Curves | Feature Importance |
-|-------------|--------------------|
-| ![RQ3 ROC](reports/figures/rq3_roc_curves.png) | ![RQ3 Feature Importance](reports/figures/rq3_feature_importance.png) |
+RQ4 — End-to-End Pipeline Inference
 
-**Normalized Confusion Matrices**
-| LogReg | Random Forest | XGBoost |
-|--------|----------------|----------|
-| ![LogReg](reports/figures/rq3_confusion_matrix_logreg.png) | ![RF](reports/figures/rq3_confusion_matrix_rf.png) | ![XGB](reports/figures/rq3_confusion_matrix_xgb.png) |
-
----
-
-### RQ4 — End-to-End Pipeline Inference
-The integrated pipeline combines food recognition, trigger ontology mapping, and XGBoost-based symptom prediction.
-
-Example output (terminal):
+Sample output:
 
 {
   "class": "steak",
@@ -136,31 +134,31 @@ Example output (terminal):
 }
 
 
----
+⸻
 
-### RQ5 — Explainable AI (XAI)
-| Grad-CAM Examples | SHAP Summary |
-|-------------------|---------------|
-| ![GradCAM Cheesecake](reports/figures/rq5_gradcam_cheesecake.png) | ![SHAP Summary](reports/figures/rq5_shap_summary.png) |
+RQ5 — Explainable AI
+	•	Grad-CAM example:
+reports/figures/rq5_gradcam_cheesecake.png
+	•	SHAP summary:
+reports/figures/rq5_shap_summary.png
+	•	SHAP dependence & bar plots:
+	•	rq5_shap_dependence_gluten.png
+	•	rq5_shap_dependence_highfat.png
+	•	rq5_shap_bar.png
 
-**Feature Dependence & Importance**
-| Gluten | High Fat | SHAP Bar |
-|--------|-----------|-----------|
-| ![SHAP Gluten](reports/figures/rq5_shap_dependence_gluten.png) | ![SHAP HighFat](reports/figures/rq5_shap_dependence_highfat.png) | ![SHAP Bar](reports/figures/rq5_shap_bar.png) |
+⸻
 
----
-
-## Generated Reports
-
-All figures and tables are automatically saved under:
+Generated Reports
 
 reports/
+│
 ├── figures/
 │   ├── rq1_*.png
 │   ├── rq2_*.png
 │   ├── rq3_*.png
 │   ├── rq5_*.png
 │   └── ...
+│
 └── tables/
     ├── rq1_*.json
     ├── rq3_*.json
@@ -170,17 +168,7 @@ reports/
 
 ⸻
 
-## All outputs are reproducible using Makefile commands:
-
-make rq4     # End-to-end inference
-make rq5     # Explainable AI (GradCAM + SHAP)
-make demo    # Combined pipeline + XAI demo
-make figures # Generate all visual results
-
-
-⸻
-
-## Key Dependencies
+Key Dependencies
 	•	Python 3.12
 	•	PyTorch 2.3.1
 	•	TorchVision 0.18.1
@@ -194,12 +182,8 @@ make figures # Generate all visual results
 
 ⸻
 
- ## Author
+Author
 
 Bekir Bozoklar
 M.Sc. Software Engineering
 University of Europe for Applied Sciences, Germany
-
-⸻
-
-
