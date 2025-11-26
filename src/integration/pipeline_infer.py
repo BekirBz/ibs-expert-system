@@ -7,7 +7,8 @@ from PIL import Image
 import pandas as pd
 import json
 
-from src.utils.paths import DATA_PROC, PROJ_ROOT
+
+from src.utils.paths import DATA_PROC, PROJ_ROOT, REPORT_TBL
 from src.vision.train_cnn import build_model
 from src.knowledge.trigger_mapper import map_class_to_triggers
 from src.ml.train_symptom_model import TRIGGER_COLS
@@ -105,15 +106,26 @@ def infer_image(image_path: Path, device="mps"):
 
 if __name__ == "__main__":
     import random
+    import os
+
+    # Test klasöründen rastgele bir görüntü seç
     root = DATA_PROC / "images" / "test"
     all_images = list(root.rglob("*.jpg"))
     if not all_images:
-        print("No test images found under:", root)
+        print("[WARN] No test images found under:", root)
     else:
         sample = random.choice(all_images)
-        print("[INFO] Using sample image:", sample)
+        print(f"[INFO] Using sample image: {sample}")
+
+        # Pipeline inference çalıştır
         result = infer_image(sample)
+
+        # SAVE PIPELINE OUTPUT TO JSON
+        out_path = REPORT_TBL / "rq4_pipeline_output.json"
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        out_path.write_text(json.dumps(result, indent=2))
+        print(f"Saved pipeline inference result to: {out_path}")
+
+        # --- Konsola da yazdır (eski davranış) ---
         print("\n✅ Final Inference Result:")
         print(json.dumps(result, indent=2))
-
-

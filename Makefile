@@ -9,7 +9,11 @@ EPOCHS ?= 5
 BATCH  ?= 32
 LR     ?= 1e-4
 
-.PHONY: help setup data subset mapping rq1 rq1_eval rq2 rq3 rq4 rq5_gradcam rq5_shap rq5 compare figures tables all demo clean clean_data
+# EPOCHS değişkenini Python'a environment olarak gönder
+# Örn: make rq1 ARCH=resnet50 EPOCHS=20
+export EPOCHS
+
+.PHONY: help setup data subset mapping rq1 rq1_eval rq2 rq3 rq4 rq5_gradcam rq5_shap rq5 compare figures tables all demo clean clean_data export_pdf
 
 # === HELP ===
 help:
@@ -33,6 +37,7 @@ help:
 	@echo "  all          - Run the entire workflow sequentially"
 	@echo "  clean        - Delete generated reports (keep best models)"
 	@echo "  clean_data   - Delete processed data (keep raw dataset)"
+	@echo "  export_pdf   - Convert all PNG figures to PDF (uses src.utils.export_results)"
 
 # === SETUP ENVIRONMENT ===
 setup:
@@ -105,3 +110,7 @@ clean:
 clean_data:
 	@echo "Removing processed data (keeping raw dataset)..."
 	@rm -rf data/processed/*
+
+# === EXPORT PNG -> PDF (dpi=600, epoch klasörlerine göre) ===
+export_pdf:
+	$(PY) -m src.utils.export_results

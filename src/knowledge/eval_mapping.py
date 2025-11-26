@@ -14,6 +14,7 @@ from src.utils.paths import DATA_PROC, REPORT_TBL, REPORT_FIG, PROJ_ROOT
 from src.knowledge.trigger_mapper import TRIGGERS, to_vector
 from src.vision.train_cnn import build_model
 
+
 def load_best(arch: str, device):
     ckpt = torch.load(PROJ_ROOT / "models" / f"{arch}_best.pt", map_location=device)
     model = build_model(ckpt["arch"], len(ckpt["classes"])).to(device)
@@ -21,13 +22,15 @@ def load_best(arch: str, device):
     classes = ckpt["classes"]
     return model, classes
 
+
 @torch.no_grad()
 def get_true_pred_classes(model, classes, device):
     tf = transforms.Compose([
-        transforms.Resize((224,224)),
+        transforms.Resize((224, 224)),
         transforms.CenterCrop(224),
         transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485,0.456,0.406], std=[0.229,0.224,0.225]),
+        transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                             std=[0.229, 0.224, 0.225]),
     ])
     ds = datasets.ImageFolder(DATA_PROC / "images" / "test", transform=tf)
     dl = DataLoader(ds, batch_size=64, shuffle=False, num_workers=0)
@@ -45,6 +48,7 @@ def get_true_pred_classes(model, classes, device):
     pred_names = [classes[i] for i in y_pred_cls]
     return true_names, pred_names
 
+
 def mapping_metrics(true_names, pred_names):
     # map classes -> trigger vectors
     true_vecs = np.array([to_vector(c) for c in true_names], dtype=int)
@@ -60,19 +64,22 @@ def mapping_metrics(true_names, pred_names):
 
     return per_trigger_acc, exact_match
 
-def plot_trigger_bar(per_trigger_acc, save_path):
-    fig = plt.figure(figsize=(6,4))
+
+def plot_trigger_bar(per_trigger_acc, save_path, dpi: int = 180):
+    """Basit trigger bazlı accuracy bar grafiği (PNG/PDF)."""
+    fig = plt.figure(figsize=(6, 4))
     keys = list(per_trigger_acc.keys())
     vals = [per_trigger_acc[k] for k in keys]
     plt.bar(keys, vals)
-    plt.ylim(0,1)
+    plt.ylim(0, 1)
     plt.ylabel("Accuracy")
     plt.title("Trigger-wise Mapping Accuracy")
     fig.tight_layout()
-    fig.savefig(save_path, dpi=180)
+    fig.savefig(save_path, dpi=dpi)
     plt.close(fig)
 
-def main(arch="resnet50"):
+
+def main(arch: str = "resnet50"):
     device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
     model, classes = load_best(arch, device)
     true_names, pred_names = get_true_pred_classes(model, classes, device)
@@ -83,14 +90,50 @@ def main(arch="resnet50"):
     REPORT_FIG.mkdir(parents=True, exist_ok=True)
 
     (REPORT_TBL / "rq2_mapping_metrics.json").write_text(
-        json.dumps({"per_trigger_acc": per_trigger_acc,
-                    "exact_match": exact_match}, indent=2)
+        json.dumps(
+            {
+                "per_trigger_acc": per_trigger_acc,
+                "exact_match": exact_match,
+            },
+            indent=2,
+        )
     )
+
+    # Varsayılan PNG çıktısı (mevcut davranış)
     plot_trigger_bar(per_trigger_acc, REPORT_FIG / "rq2_mapping_accuracy.png")
 
-    print("Saved:",
-          REPORT_TBL / "rq2_mapping_metrics.json",
-          REPORT_FIG / "rq2_mapping_accuracy.png")
+    print(
+        "Saved:",
+        REPORT_TBL / "rq2_mapping_metrics.json",
+        REPORT_FIG / "rq2_mapping_accuracy.png",
+    )
+
+
+def plot_mapping_accuracy(suffix: str = "png", dpi: int = 220):
+    """
+    export_results.py tarafından çağrılır.
+    Kaydedilmiş rq2_mapping_metrics.json'dan per_trigger_acc'i okuyup,
+    istenen formatta (png/pdf) mapping accuracy grafiğini yeniden üretir.
+    """
+    REPORT_TBL.mkdir(parents=True, exist_ok=True)
+    REPORT_FIG.mkdir(parents=True, exist_ok=True)
+
+    metrics_path = REPORT_TBL / "rq2_mapping_metrics.json"
+    if not metrics_path.exists():
+        print(f"[RQ2] Metrics file not found: {metrics_path}")
+        return None
+
+    metrics = json.loads(metrics_path.read_text())
+    per_trigger_acc = metrics.get("per_trigger_acc")
+    if not per_trigger_acc:
+        print(f"[RQ2] per_trigger_acc not found in {metrics_path}")
+        return None
+
+    out_path = REPORT_FIG / f"rq2_mapping_accuracy.{suffix}"
+    plot_trigger_bar(per_trigger_acc, out_path, dpi=dpi)
+    print(f"✅ Saved RQ2 mapping accuracy figure: {out_path}")
+    return out_path
+
 
 if __name__ == "__main__":
     main()

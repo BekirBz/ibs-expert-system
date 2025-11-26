@@ -1,4 +1,4 @@
-# === PYTHON ENVIRONMENT ===
+# === PYTHON / BUILD ARTIFACTS ===
 __pycache__/
 *.py[cod]
 *.so
@@ -11,38 +11,34 @@ build/
 .venv/
 venv/
 env/
+.python-version
 Pipfile
 Pipfile.lock
 
-# === DATASETS ===
-data/raw/
-data/processed/
-data/interim/
+# === DATA, DATASETS & LARGE ARTIFACTS ===
+data/raw/**
+data/processed/**
+data/interim/**
+!data/interim/.gitkeep
+!data/interim/class_list.csv
+!data/interim/trigger_mapping.csv
 *.zip
 *.tar
 *.tar.gz
 *.h5
-*.csv
-!data/interim/trigger_mapping.csv   # Keep ontology mapping only
 
 # === MODEL CHECKPOINTS ===
-models/*.pt
-models/*.pkl
-models/*.h5
-models/*.ckpt
-models/*.onnx
-!models/README.md   # Optional notes
+models/**
+!models/.gitkeep
+!models/README.md
 
 # === REPORTS ===
-# Ignore all reports except the final visual results used in README
-reports/figures/
-!reports/figures/rq1_*
-!reports/figures/rq2_*
-!reports/figures/rq3_*
-!reports/figures/rq4_*
-!reports/figures/rq5_*
-!reports/tables/rq*_*
+reports/**
 !reports/.gitkeep
+!reports/figures/.gitkeep
+!reports/figures/static/**
+!reports/tables/.gitkeep
+!reports/tables/static/**
 
 # === NOTEBOOKS & TEMP FILES ===
 *.ipynb_checkpoints

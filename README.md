@@ -1,87 +1,99 @@
-# IBS Expert System  
-### AI-based Food Intake & Symptom Severity Prediction for IBS Patients  
+# IBS Expert System
+### AI-based food intake & symptom severity prediction for IBS patients
 
-This project develops an **AI-driven Expert System** that predicts **symptom severity in Irritable Bowel Syndrome (IBS)** patients based on their dietary intake.  
-It integrates **food recognition (CNN)**, **ontology-based trigger mapping**, and **machine learning (XGBoost)** to produce interpretable, patient-centered insights.  
-Explainability is achieved using **Grad-CAM** for CNN visualization and **SHAP** for feature-level interpretability.  
+This repository delivers an **AI-driven expert system** that estimates **IBS symptom severity** directly from a meal photo. The solution combines:
+
+- **Food recognition (ResNet50 / MobileNetV2)** trained on a curated Food-101 subset.
+- **Ontology-based trigger mapping** that turns dish predictions into IBS trigger vectors (gluten, lactose, caffeine, high-fat, FODMAP).
+- **Symptom modeling (XGBoost + baselines)** with explainability via **Grad-CAM** and **SHAP**.
+
+Every step is orchestrated through the Makefile so datasets, checkpoints, figures, and tables stay reproducible.
 
 ----
 
-## Project Structure
+## High-Level Workflow
+
+```
+        +------------+     +---------------------+     +--------------------+
+        |  Data Prep | --> | CNN Training (RQ1)   | --> | Food Predictions   |
+        +------------+     +---------------------+     +--------------------+
+               |                       |                        |
+               v                       v                        v
+   +------------------+      +--------------------+    +-----------------------+
+   | Trigger Mapping  | -->  | Symptom Models      | -> | Pipeline Inference    |
+   | & Ontology (RQ2) |      | (LogReg/RF/XGB, RQ3)|    | + Explainability RQ4/5|
+   +------------------+      +--------------------+    +-----------------------+
+```
+
+Artifacts flow from `data/` → `models/` → `reports/epoch{EPOCHS}` so you can regenerate everything with a single command.
+
+----
+
+## Repository Layout
 
 ```
 ibs-expert-system/
-│
-├── data/
-│   ├── raw/                     # Food-101 dataset
-│   ├── processed/               # Preprocessed images
-│   └── interim/                 # Trigger mapping CSV
-│
-├── models/                      # Trained model checkpoints
-├── reports/
-│   ├── figures/                 # Visual outputs (GradCAM, SHAP, etc.)
-│   └── tables/                  # JSON + text reports
-│
-├── src/
-│   ├── data_prep/               # Dataset download & preprocessing
-│   ├── knowledge/               # Ontology and trigger mapping
-│   ├── ml/                      # Symptom severity models (RQ3)
-│   ├── integration/             # End-to-end pipeline (RQ4)
-│   ├── vision/                  # CNN models (RQ1)
-│   └── xai/                     # Explainable AI (RQ5)
-│
-├── requirements.txt             # Dependencies
-├── Makefile                     # Automated workflow runner
-└── README.md                    # Project overview
+├── data/              # raw / interim / processed assets (Food-101 subset, mappings)
+├── models/            # trained CNN + symptom-severity checkpoints
+├── reports/           # figures/epochX + tables/epochX (auto-created)
+├── src/               # research modules (data_prep, vision, knowledge, ml, integration, xai)
+├── Makefile           # single entry point for every RQ
+├── requirements.txt   # Python dependencies
+└── README.md
 ```
----
 
-## Installation
+----
+
+## Setup
 
 ```bash
-# 1. Clone this repository
-git clone 
+# 1) Clone + enter
+git clone <your-fork-or-ssh-url> ibs-expert-system
 cd ibs-expert-system
 
-# 2. Create and activate virtual environment
+# 2) Create a virtualenv (Python ≥3.12 recommended)
 python3 -m venv .venv
 source .venv/bin/activate
 
-# 3. Install dependencies
+# 3) Install requirements via the Makefile helper
 make setup
 ```
 
-----
-
-## Main Research Questions (RQs)
-
-RQ	Description	Module
-RQ1	Food image classification using CNN (ResNet50, MobileNetV2)	src/vision
-RQ2	Food-trigger mapping and ontology evaluation	src/knowledge
-RQ3	Symptom severity prediction via ML (LogReg, RF, XGBoost)	src/ml
-RQ4	Full pipeline inference (Food → Trigger → Symptom)	src/integration
-RQ5	Explainable AI with Grad-CAM and SHAP visualizations	src/xai
-
+> **Tip:** all `make …` targets reuse `.venv/bin/python`, so you can stay inside the repo root without re-activating the environment later.
 
 ----
 
-## Usage (Makefile Commands)
+## Make Targets (cheat sheet)
 
-Command	Description
-make data	Download Food-101 dataset
-make subset	Create training subset
-make mapping	Build trigger mapping + ontology
-make rq1	Train & evaluate CNN
-make rq2	Generate ontology figures
-make rq3	Train symptom severity models
-make rq4	Run full inference pipeline
-make rq5	Run explainability bundle (Grad-CAM + SHAP)
-make demo	Run complete demo (Pipeline + XAI)
-make figures	Generate all figures (RQ1–RQ5)
-make tables	Export all tables
-make clean	Clear generated reports
-make clean_data	Clear processed data
+| Command            | Description                                                     |
+|--------------------|-----------------------------------------------------------------|
+| `make data`        | Download + extract Food-101 into `data/raw`.                    |
+| `make subset`      | Build the curated class subset and split into train/val/test.   |
+| `make mapping`     | Export trigger mappings + ontology plot (RQ2).                  |
+| `make rq1`         | Train and evaluate the CNN for a chosen `ARCH`.                 |
+| `make rq2`         | Re-run ontology evaluation/plots without rebuilding CSV.        |
+| `make rq3`         | Train symptom-severity ML models and save metrics/plots.        |
+| `make rq4`         | Execute end-to-end inference (Food → Trigger → Severity).       |
+| `make rq5`         | Generate Grad-CAM overlays and SHAP visualizations.             |
+| `make demo`        | Quick showcase (`rq4` + `rq5`).                                  |
+| `make figures`     | Produce every figure for RQ1–RQ5.                               |
+| `make tables`      | Export all JSON/txt tables (RQ1, RQ3, RQ5).                      |
+| `make clean`       | Remove generated reports only.                                  |
+| `make clean_data`  | Remove processed data (raw dataset is preserved).               |
 
+Targets accept overrides, e.g. `make rq1 ARCH=mobilenetv2 EPOCHS=20 BATCH=16`.
+
+----
+
+## Research Questions
+
+| RQ  | Description                                              | Module             |
+|-----|----------------------------------------------------------|--------------------|
+| RQ1 | Food image classification with CNN backbones.            | `src/vision`       |
+| RQ2 | Food-trigger ontology & mapping fidelity.                | `src/knowledge`    |
+| RQ3 | Symptom severity modeling (LogReg, RF, XGBoost).         | `src/ml`           |
+| RQ4 | End-to-end pipeline inference (Food → Trigger → Symptom) | `src/integration`  |
+| RQ5 | Explainability bundle (Grad-CAM + SHAP).                 | `src/xai`          |
 
 ----
 
@@ -123,8 +135,9 @@ Below are selected results generated automatically from the system:
 ### RQ4 — End-to-End Pipeline Inference
 The integrated pipeline combines food recognition, trigger ontology mapping, and XGBoost-based symptom prediction.
 
-Example output (terminal):
+Example console output:
 
+```
 {
   "class": "steak",
   "triggers": [0, 0, 0, 1, 0],
@@ -135,13 +148,13 @@ Example output (terminal):
     "None": 0.050
   }
 }
-
+```
 
 ----
 
 ### RQ5 — Explainable AI (XAI)
 | Grad-CAM Examples | SHAP Summary |
-|-------------------|---------------|
+|-------------------|--------------|
 | ![GradCAM Cheesecake](reports/figures/rq5_gradcam_cheesecake.png) | ![SHAP Summary](reports/figures/rq5_shap_summary.png) |
 
 **Feature Dependence & Importance**
@@ -153,52 +166,40 @@ Example output (terminal):
 
 ## Generated Reports
 
-All figures and tables are automatically saved under:
+Outputs are grouped by epoch (default `EPOCHS=5`, override via `make … EPOCHS=10`):
+
 ```
 reports/
 ├── figures/
-│   ├── rq1_*.png
-│   ├── rq2_*.png
-│   ├── rq3_*.png
-│   ├── rq5_*.png
-│   └── ...
+│   └── epoch5/
+│       ├── rq1_*.png
+│       ├── rq2_*.png
+│       ├── rq3_*.png
+│       └── rq5_*.png
 └── tables/
-    ├── rq1_*.json
-    ├── rq3_*.json
-    ├── rq5_*.json
-    └── ...
+    └── epoch5/
+        ├── rq1_*.json
+        ├── rq3_*.json
+        └── rq5_*.json
 ```
 
 ----
 
-## All outputs are reproducible using Makefile commands:
-
-make rq4     # End-to-end inference
-make rq5     # Explainable AI (GradCAM + SHAP)
-make demo    # Combined pipeline + XAI demo
-make figures # Generate all visual results
-
-
-----
 ## Key Dependencies
-	•	Python 3.12
-	•	PyTorch 2.3.1
-	•	TorchVision 0.18.1
-	•	XGBoost 2.0.3
-	•	scikit-learn 1.4.2
-	•	SHAP 0.45.1
-	•	NetworkX 3.2.1
-	•	Graphviz 0.20.3
-	•	Matplotlib 3.8.4
-	•	Pandas 2.2.2
+
+- Python 3.12
+- PyTorch 2.3.1 / TorchVision 0.18.1
+- XGBoost 2.0.3
+- scikit-learn 1.4.2
+- SHAP 0.45.1
+- NetworkX 3.2.1 + Graphviz 0.20.3
+- Matplotlib 3.8.4, Pandas 2.2.2
 
 ----
 
- ## Author
+## Author
 
-Bekir Bozoklar
-M.Sc. Software Engineering
+Bekir Bozoklar  
+M.Sc. Software Engineering  
 University of Europe for Applied Sciences, Germany
-
-
 
